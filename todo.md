@@ -9,6 +9,16 @@ Privacy-focused: kein Hintergrund-Daemon, keine Tasten- oder Fenstertitelüberwa
   - [x] **Windows:** Native Abfrage des Windows System Event Logs (IDs 6005/6006, Kernel-Power 42/107/506/507, Power-Troubleshooter 1).
   - [x] **Linux:** Native Abfrage von `systemd-journald` (`journalctl --list-boots -o json` und standardisierte Sleep-Message-IDs).
   - [x] **macOS (iMac / MacBook):** Auswertung von `pmset -g log` und Kernel-Boottime via `sysctl kern.boottime`.
+- [x] **Terminal User Interface (TUI):**
+  - [x] Ratatui (0.30) & Crossterm (0.29) basierte interaktive Terminaloberfläche mit Unicode 24h Zeitstrahl (`█`, `░`, `▓`, `·`).
+  - [x] Tab-Umschaltung zwischen Übersicht und Einzelsitzungen (`Tab`, `1`, `2`).
+  - [x] Interaktive Steuerung (`↑`/`↓` für Tage, `r` für Refresh, `e` für Export, `q` für Beenden).
+  - [x] RAII Terminal Guard für sauberen Terminal-Reset auch bei Panics/Ctrl+C.
+  - [x] 100 % MIT-lizenzierte Abhängigkeiten, 23 Tests bestanden.
+- [x] **CLI Schnellbefehle:**
+  - [x] `--status` / `-s` für einzeilige Statusausgabe (Waybar / i3status / tmux).
+  - [x] `--export [PFAD]` / `-e` für Headless-CSV-Generierung.
+  - [x] Automatische Modus-Erkennung (GUI bei Display, TUI bei Headless / SSH).
 - [x] **Egui UI:**
   - [x] 24-Stunden-Zeitleiste der letzten 120 Tage mit Segmentierung (Wach, Suspend, Hibernate).
   - [x] Übersicht heutiger Sitzungen, Monatsstatistiken (Gesamt, Tagesschnitt, aktive Tage).
@@ -17,15 +27,15 @@ Privacy-focused: kein Hintergrund-Daemon, keine Tasten- oder Fenstertitelüberwa
   - [x] Slint vollständig entfernt, schlanker Einstiegspunkt in `src/main.rs`.
 - [x] **Code-Qualität & Clippy No-Panic-Direktiven:**
   - [x] `panic`, `unwrap_used`, `expect_used`, `panic_in_result_fn`, `unreachable`, `todo`, `unimplemented` auf `deny`.
-  - [x] Alle 18 Tests bestanden, 0 Clippy-Warnungen.
+  - [x] Alle 23 Tests bestanden, 0 Clippy-Warnungen.
 - [x] **Lizenz-Compliance:**
   - [x] Paket-Lizenz auf MIT gesetzt (`Cargo.toml`).
   - [x] `deny.toml` Richtlinie (Ausschluss von Copyleft & Unlicensed).
   - [x] Automatisierter Test in `tests/test_license_compatibility.rs` prüft alle Abhängigkeiten über `cargo metadata`.
-- [x] **Build-Skripte:**
+- [x] **Build-Skripte & Release:**
   - [x] `build.bat` für Windows.
   - [x] `build.sh` für Linux und macOS.
-  - [x] Nativer Linux-Release-Build erfolgreich verifiziert (`target/release/time-recon`).
+  - [x] Nativer Linux-Release-Build erfolgreich verifiziert (`target/release/TimeRecon`).
 
 ## Referenzprojekte
 

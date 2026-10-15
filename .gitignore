@@ -2,3 +2,4 @@
 /referenz
 Cargo.lock
 *.exe
+.context/
