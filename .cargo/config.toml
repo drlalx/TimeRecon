@@ -1,0 +1,2 @@
+# Default target is host-native (Linux, Windows, macOS).
+# To explicitly target Windows: cargo build --target x86_64-pc-windows-msvc

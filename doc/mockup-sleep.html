@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Active Time – Sleep segments mockup</title>
+<style>
+  :root {
+    --bg: #1e1e2e; --surface: #313244; --text: #cdd6f4; --muted: #a6adc8;
+    --faint: #6c7086; --blue: #89b4fa; --green: #a6e3a1; --red: #f38ba8;
+    --peach: #fab387; --mauve: #cba6f7;
+  }
+  body { background: var(--bg); color: var(--text); font: 13px "Segoe UI", sans-serif; margin: 0; }
+  .window { width: 760px; margin: 24px auto; padding: 12px 16px; border: 1px solid var(--surface); border-radius: 8px; }
+  header { display: flex; justify-content: space-between; align-items: center; }
+  h1 { font-size: 20px; margin: 0; }
+  .card { background: var(--surface); border-radius: 6px; padding: 6px 10px; margin: 8px 0; display: flex; gap: 14px; }
+  .muted { color: var(--muted); } .faint { color: var(--faint); }
+  .legend { display: flex; gap: 16px; margin: 10px 0 4px; color: var(--muted); }
+  .legend span::before { content: ""; display: inline-block; width: 18px; height: 10px; margin-right: 6px; border-radius: 2px; vertical-align: middle; background: var(--c); }
+  .axis, .row { display: grid; grid-template-columns: 78px 1fr 64px 56px 64px; gap: 8px; align-items: center; }
+  .axis { color: var(--faint); font-size: 11px; margin-top: 6px; }
+  .axis .hours { display: flex; justify-content: space-between; }
+  .axis .num { text-align: right; }
+  .row { height: 26px; border-radius: 4px; }
+  .row:hover { background: var(--surface); }
+  .row.today { outline: 1px solid var(--blue); }
+  .track { position: relative; height: 14px; background: repeating-linear-gradient(90deg, transparent 0 calc(100%/24 - 1px), #45475a calc(100%/24 - 1px) calc(100%/24)); border-radius: 3px; }
+  .seg { position: absolute; top: 0; bottom: 0; border-radius: 2px; }
+  .seg.active { background: var(--blue); }
+  .seg.sleep { background: repeating-linear-gradient(45deg, var(--peach) 0 3px, #c98a64 3px 6px); }
+  .seg.hibernate { background: repeating-linear-gradient(45deg, var(--mauve) 0 3px, #9f82c4 3px 6px); }
+  .seg.span { top: -2px; bottom: -2px; border: 1px dashed var(--faint); background: transparent; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .net { color: var(--green); } .pause { color: var(--peach); }
+  #tip { position: fixed; pointer-events: none; background: #11111b; border: 1px solid var(--faint); border-radius: 6px; padding: 6px 10px; display: none; line-height: 1.5; }
+  .note { color: var(--faint); font-size: 12px; margin-top: 14px; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="window">
+  <header>
+    <h1>Active Time</h1>
+    <div><span style="color:var(--green)">● PC on</span> &nbsp; <span style="color:var(--blue)">Today: 6h 12m</span></div>
+  </header>
+
+  <div class="card"><span>Month: <b>118h 40m</b> work</span><span class="muted">| Average: 7h 25m</span><span class="pause">| Sleep: 21h 05m</span><span class="faint">| 16 days</span></div>
+
+  <div class="legend">
+    <span style="--c:var(--blue)">Active (work time)</span>
+    <span style="--c:repeating-linear-gradient(45deg,var(--peach) 0 3px,#c98a64 3px 6px)">Sleep (S3 / Modern Standby)</span>
+    <span style="--c:repeating-linear-gradient(45deg,var(--mauve) 0 3px,#9f82c4 3px 6px)">Hibernate</span>
+    <span style="--c:transparent;">⸺ Begin–end span</span>
+  </div>
+
+  <div class="axis"><span></span><div class="hours"><span>0</span><span>3</span><span>6</span><span>9</span><span>12</span><span>15</span><span>18</span><span>21</span><span>24</span></div><span class="num">Work</span><span class="num">Sleep</span><span class="num">Span</span></div>
+  <div id="rows"></div>
+
+  <p class="note">
+    Mockup only. The dashed frame is the existing begin–end bar. Inside it, blue segments are
+    time the PC was awake; hatched segments are sleep/hibernate periods, which are excluded from
+    the "Work" column. Gaps without any segment mean the PC was shut down.
+  </p>
+</div>
+<div id="tip"></div>
+
+<script>
+// Each segment: [type, "HH:MM", "HH:MM"]
+const days = [
+  { d: "Thu 25.09.", today: true, s: [["active","07:48","09:55"],["sleep","09:55","10:20"],["active","10:20","12:05"],["sleep","12:05","12:48"],["active","12:48","15:03"]] },
+  { d: "Wed 24.09.", s: [["active","08:02","12:10"],["sleep","12:10","12:55"],["active","12:55","17:31"]] },
+  { d: "Tue 23.09.", s: [["active","07:35","11:40"],["sleep","11:40","11:58"],["active","11:58","12:15"],["sleep","12:15","13:02"],["active","13:02","16:48"]] },
+  { d: "Mon 22.09.", s: [["active","08:15","12:30"],["hibernate","12:30","14:10"],["active","14:10","18:05"]] },
+  { d: "Sun 21.09.", s: [] },
+  { d: "Sat 20.09.", s: [["active","10:05","10:50"]] },
+  { d: "Fri 19.09.", s: [["active","07:40","12:00"],["sleep","12:00","12:40"],["active","12:40","14:25"]] },
+  { d: "Thu 18.09.", s: [["active","08:10","10:00"],["sleep","10:00","10:45"],["active","10:45","12:20"],["sleep","12:20","13:05"],["active","13:05","17:50"],["sleep","17:50","19:30"],["active","19:30","20:15"]] },
+];
+
+const min = t => { const [h, m] = t.split(":").map(Number); return h * 60 + m; };
+const fmt = m => `${Math.floor(m / 60)}h ${String(m % 60).padStart(2, "0")}m`;
+const pct = m => (m / 1440 * 100).toFixed(3) + "%";
+const label = { active: "Active", sleep: "Sleep", hibernate: "Hibernate" };
+const tip = document.getElementById("tip");
+const rows = document.getElementById("rows");
+
+for (const day of days) {
+  const row = document.createElement("div");
+  row.className = "row" + (day.today ? " today" : "");
+  let work = 0, pause = 0, html = "";
+  if (day.s.length) {
+    const b = min(day.s[0][1]), e = min(day.s.at(-1)[2]);
+    html += `<div class="seg span" style="left:${pct(b)};width:${pct(e - b)}"></div>`;
+    for (const [type, from, to] of day.s) {
+      const len = min(to) - min(from);
+      type === "active" ? work += len : pause += len;
+      html += `<div class="seg ${type}" style="left:${pct(min(from))};width:${pct(len)}"
+        data-tip="<b>${label[type]}</b><br>${from} – ${to} (${fmt(len)})"></div>`;
+    }
+    row.innerHTML = `<span>${day.d}</span><div class="track">${html}</div>
+      <span class="num net">${fmt(work)}</span><span class="num pause">${pause ? fmt(pause) : "–"}</span>
+      <span class="num muted">${fmt(e - b)}</span>`;
+  } else {
+    row.innerHTML = `<span class="faint">${day.d}</span><div class="track"></div>
+      <span class="num faint">–</span><span class="num faint">–</span><span class="num faint">–</span>`;
+  }
+  rows.appendChild(row);
+}
+
+rows.addEventListener("mousemove", ev => {
+  const t = ev.target.dataset?.tip;
+  if (!t) { tip.style.display = "none"; return; }
+  tip.innerHTML = t; tip.style.display = "block";
+  tip.style.left = ev.clientX + 12 + "px"; tip.style.top = ev.clientY + 12 + "px";
+});
+rows.addEventListener("mouseleave", () => tip.style.display = "none");
+</script>
+</body>
+</html>
