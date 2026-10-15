@@ -6,10 +6,17 @@ authors = ["Alexander Drichel"]
 license = "MIT"
 description = "Reconstruct PC uptime and activity from system event logs."
 
+[features]
+default = ["egui-ui", "tui"]
+egui-ui = ["dep:eframe"]
+tui = ["dep:ratatui", "dep:crossterm"]
+
 [dependencies]
 chrono = { version = "0.4.45", features = ["serde"] }
 dirs = "7.0"
 serde_json = "1.0"
+ratatui = { version = "0.30", default-features = false, features = ["crossterm"], optional = true }
+crossterm = { version = "0.29", optional = true }
 
 [target.'cfg(windows)'.dependencies]
 windows = { version = "0.62", features = ["Win32_Foundation", "Win32_System_EventLog"] }
@@ -18,16 +25,19 @@ windows = { version = "0.62", features = ["Win32_Foundation", "Win32_System_Even
 version = "0.36"
 default-features = false
 features = ["glow"]
+optional = true
 
 [target.'cfg(target_os = "linux")'.dependencies.eframe]
 version = "0.36"
 default-features = false
 features = ["glow", "wayland", "x11", "default_fonts"]
+optional = true
 
 [target.'cfg(target_os = "macos")'.dependencies.eframe]
 version = "0.36"
 default-features = false
 features = ["glow", "default_fonts"]
+optional = true
 
 [target.'cfg(windows)'.build-dependencies]
 winresource = "0.1"

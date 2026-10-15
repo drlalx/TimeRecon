@@ -15,11 +15,25 @@ activity.
 From the project root, run:
 
 ```text
+# Default UI (GUI if display available, otherwise TUI)
 cargo run
+
+# Force Terminal UI (Ratatui)
+cargo run -- --tui
+
+# Force Desktop GUI (Egui)
+cargo run -- --gui
+
+# Print quick status line and exit (useful for Waybar / tmux)
+cargo run -- --status
+
+# Headless CSV export
+cargo run -- --export my-export.csv
 ```
 
-The application loads the last 120 calendar days when it starts. Use the
-refresh button to reload the event log.
+The application loads the last 120 calendar days when it starts. In the GUI, use the
+refresh button; in the TUI, press `r` to reload the event log. In the TUI, use `Tab`
+to switch views, `↑`/`↓` to navigate days, and `e` to export CSV.
 
 ## Use the overview
 
