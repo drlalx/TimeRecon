@@ -11,6 +11,7 @@
   - `egui-ui`: Desktop GUI (`src/egui_ui.rs`) using `eframe 0.36`.
   - `tui`: Terminal User Interface (`src/tui/`) using `ratatui 0.30` and `crossterm 0.29` with 24h Unicode timeline.
   - Default features: `["egui-ui", "tui"]`.
+  - Windows Subsystem: Uses `#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]` in release builds so that no terminal window flashes when launching the GUI. CLI commands and TUI dynamically attach or allocate a console via Windows API (`AttachConsole` / `AllocConsole` and standard stream handles).
 - CLI Modes:
   - Default: launches GUI if display server (`DISPLAY`/`WAYLAND_DISPLAY`) is available; automatically falls back to TUI in headless/SSH environments.
   - Flags: `--tui` / `-t` (force TUI), `--gui` / `-g` (force GUI), `--status` / `-s` (one-line summary for statusbars/tmux), `--export [path]` / `-e` (headless CSV export).
@@ -25,6 +26,6 @@
 - Remotes:
   - Origin: `gitea@192.168.178.45:adrichel/TimeRecon.git`
   - GitHub: `git@github.com:drlalx/TimeRecon.git`
+- Windows mixed-DPI dragging: Temporarily pins `winit` PR #4694 commit `39c4009c41e5977d779cf8a365792c8153ca77c5` in `Cargo.toml`. The fix was runtime-tested with `eframe 0.36.2` on 125%/100% monitors; remove the override after an official `winit 0.30.x` release includes the fix.
 - SigMap / Context: Configured via `gen-context.config.json`; run `sigmap` to update signatures across `.github/`, `AGENTS.md`, and `CLAUDE.md`.
 - Update: Keep this file current when important findings, conventions, or dependencies change.
-

@@ -1,9 +1,7 @@
 {
   "_comment": "SigMap configuration — all keys are optional (defaults shown). Copy to gen-context.config.json.",
 
-  "output": ".github/copilot-instructions.md",
-
-  "outputs": ["copilot", "codex", "claude", "gemini"],
+  "output": ".github/instructions/sigmap-signatures.instructions.md",
 
   "_srcDirs_comment": "Source directories to scan. OMIT this key to use auto-detection (recommended).",
   "_srcDirs_comment2": "Auto-detection reads package.json/go.mod/Cargo.toml and scans top-level dirs automatically.",
