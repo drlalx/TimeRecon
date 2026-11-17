@@ -1,2 +1,11 @@
 # Default target is host-native (Linux, Windows, macOS).
 # To explicitly target Windows: cargo build --target x86_64-pc-windows-msvc
+
+# Windows: link the C runtime statically, so the .exe does not need
+# vcruntime140.dll (Visual C++ Redistributable). UCRT ships with Windows 10+.
+# Measured 11/2026: +100 to +225 KB per binary, no change in build time.
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "target-feature=+crt-static"]
+
+[target.aarch64-pc-windows-msvc]
+rustflags = ["-C", "target-feature=+crt-static"]
