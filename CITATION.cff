@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "TimeRecon"
+abstract: "Cross-platform desktop and terminal utility written in Rust that reconstructs PC uptime and activity from system event logs."
+authors:
+  - family-names: "Drichel"
+    given-names: "Alexander"
+    alias: "drlalx"
+version: "0.1.0"
+date-released: 2026-11-13
+license: MIT
+repository-code: "https://github.com/drlalx/TimeRecon"
+url: "https://github.com/drlalx/TimeRecon"
+keywords:
+  - rust
+  - uptime
+  - event-log
+  - activity-tracker
+  - time-tracking
+  - egui
+  - ratatui
